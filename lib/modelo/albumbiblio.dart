@@ -34,12 +34,14 @@ class AlbumBiblio extends ChangeNotifier {
   void addAlbum(Album album) {
     _listaAlbumes.add(album);
     notifyListeners();
+    guardarAlbumes();
   }
 
   bool updateAlbum(int index, Album album) {
     if (index >= 0 && index < _listaAlbumes.length) {
       _listaAlbumes[index] = album;
       notifyListeners();
+      guardarAlbumes();
       return true;
     }
     return false;
@@ -49,6 +51,7 @@ class AlbumBiblio extends ChangeNotifier {
     if (index >= 0 && index < _listaAlbumes.length) {
       _listaAlbumes.removeAt(index);
       notifyListeners();
+      guardarAlbumes();
       return true;
     }
     return false;
