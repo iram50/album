@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'album.dart';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:async';
+import 'package:path_provider/path_provider.dart';
 
 class AlbumBiblio extends ChangeNotifier {
   final List<Album> _listaAlbumes = [];
@@ -49,5 +52,30 @@ class AlbumBiblio extends ChangeNotifier {
       return true;
     }
     return false;
+  }
+
+  static Future<String> get _pathLocal async {
+    final directorio = await getApplicationDocumentsDirectory();
+    return directorio.path;
+  }
+
+  static Future<File> get _archivoLocal async {
+    final path = await _pathLocal;
+    return File('$path${Platform.pathSeparator}$nombreArchivo');
+  }
+
+  Future<File> guardarAlbumes() async {
+    final archivo = await _archivoLocal;
+    return archivo.writeAsString(jsonEncode(toJson()));
+  }
+
+  static Future<Map<String, dynamic>?> leerArchivo() async {
+    final archivo = await _archivoLocal;
+    if (archivo.existsSync()) {
+      String contenido = await archivo.readAsString();
+      return jsonDecode(contenido);
+    }
+
+    return null;
   }
 }
